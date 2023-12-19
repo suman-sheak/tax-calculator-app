@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Calculator</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="node.js"></script>
+    <style>
+        body {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #taxForm {
+            background-color: #34495e;
+            border: 2px solid #2c3e50;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            width: 300px;
+            text-align: center;
+        }
+
+        /* h2 {
+            color: #3498db;
+            font-size: 2em;
+            text-align: left;
+            
+        } */
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            color: #ecf0f1;
+        }
+
+        input {
+            width: calc(100% - 20px);
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            border: 1px solid #3498db;
+            border-radius: 5px;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+        }
+
+        input[type="button"] {
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+        }
+
+        input[type="button"]:hover {
+            background-color: #2980b9;
+        }
+
+        span {
+            font-weight: bold;
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+
+
+
+<form id="taxForm">
+    <h2>Tax Calculation Form</h2> 
+    <label for="name">Name:</label><br>
+    <input type="text" id="name" name="name" required><br><br>
+
+    <label for="pan">PAN No:</label><br>
+    <input type="text" id="pan" name="pan" required pattern="[A-Za-z]{5}[0-9]{4}[A-Za-z]{1}"><br><br>
+
+    <label for="salary">Salary (Annual):</label><br>
+    <input type="number" id="salary" name="salary" required min="0" step="0.01"><br><br>
+    <input type="button" value="Calculate Tax" onclick="main()"><br><br>
+
+    <label for="taxableIncome">Taxable Income:</label>
+    ₹<span id="taxableIncome"></span><br>
+
+    <label for="tax">Tax:</label>
+    ₹<span id="tax"></span><br>
+</form>
+
+</body>
+<script>
+    function calculateTax(income) {
+    let tax = 0.0;
+
+    if (income <= 50000) {
+        tax = 0;
+    } else if (income > 50000 && income <= 300000) {
+        tax = 0.05 * (income - 50000);
+    } else if (income > 300000 && income <= 600000) {
+        tax = 0.10 * (income - 300000) + calculateTax(300000);
+    } else if (income > 600000 && income <= 900000) {
+        tax = 0.15 * (income - 600000) + calculateTax(600000);
+    } else if (income > 900000 && income <= 1200000) {
+        tax = 0.20 * (income - 900000) + calculateTax(900000);
+    } else if (income > 1200000 && income <= 1500000) {
+        tax = 0.30 * (income - 1200000) + calculateTax(1200000);
+    } else if (income > 1500000) {
+        tax = 0.30 * (income - 1500000) + calculateTax(1500000);
+    }
+
+    return tax;
+
+}
+
+function main() {
+    let totalIncome = parseFloat(document.getElementById('salary').value);
+    let income = totalIncome - 50000;
+
+    document.getElementById('taxableIncome').innerText = income.toFixed(2);
+
+    let tax = calculateTax(income);
+
+    document.getElementById('tax').innerText = (1.04 * tax).toFixed(2);
+}
+</script>
+</html>
